@@ -4,8 +4,7 @@ Entity Movie {
     code varchar(10) <<PK>>
     name varchar(100) <<NN>>
     image varchar(255)
-    year int(4) 
-    rating float(8)
+    year int(4)     
 }
 
 Entity Review {
