@@ -50,7 +50,7 @@ def create():
         api = ApiResponse()
     except IntegrityError as ex:
         status = 400
-        if ex.code == 1062:
+        if ex.args[0] == 1062:
             api = ApiResponse(message="Ya existe una pelicula con este codigo")
         else:
             api = ApiResponse(message=str(ex))
