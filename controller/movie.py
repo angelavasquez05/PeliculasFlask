@@ -38,16 +38,27 @@ def findByCode(code):
 def create():
     api = None
     status = 201
-    try:        
-        code = request.json["code"]
-        name = request.json["name"]
-        image = request.json["image_url"]
-        year = request.json["year"]
-    
-        movie = Movie(code, name, image_url=image, year=year)
-        repository.insert(movie)
-    
-        api = ApiResponse()
+    try: 
+        data = request.get_json(force=True)       
+        
+        if data.get("code") is None:
+            api = ApiResponse(message="El codigo de la pelicula es un obligatorio")
+            status = 400
+        elif data.get("name") is None:
+            api = ApiResponse(message="El nombre de la pelicula es obligatorio")
+            status = 400
+        else: 
+            if not (isinstance(data.get("code"),str)):           
+                api = ApiResponse(message="El codigo debe ser una cadena")
+                status = 400
+            else:
+                movie = Movie(
+                    data.get("code"),
+                    data.get("name"),
+                    data.get("image_url"),
+                    data.get("year"))                   
+                repository.insert(movie)        
+                api = ApiResponse(True)
     except IntegrityError as ex:
         status = 400
         if ex.args[0] == 1062:
